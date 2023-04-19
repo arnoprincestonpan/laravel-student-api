@@ -23,3 +23,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('students', function(){
     return Student::all();
 });
+
+// Get student by id (implicit model binding)
+Route::get("students/{student}", function(Student $student){
+    return $student;
+});
+
+// Get student by id (original)
+// Route::get("students/{id}", function($id){
+//     $student = Student::findOrFail($id);
+//     return $student;
+// });
+
+// Post (create) student by parameters
+Route::post('students', function(){
+    return Student::create([
+        'FirstName' => request('FirstName'),
+        'LastName' => request('LastName'),
+        'School' => request('School')
+    ]);
+});
