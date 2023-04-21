@@ -1,6 +1,8 @@
 <?php
 // use Student Model for route
 use App\Models\Student;
+// use StudentsController for routes
+use App\Http\Controllers\Api\StudentsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 // use this to catch validation for request()->validate([])
@@ -22,9 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Get All Students
-Route::get('students', function(){
-    return Student::all();
-});
+Route::get("students", [StudentsController::class, 'index']);
 
 // Get student by id (implicit model binding)
 Route::get("students/{student}", function(Student $student){
