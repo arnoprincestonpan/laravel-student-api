@@ -21,7 +21,37 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            // validate input before creation
+           $data = request()->validate([
+               'FirstName'=>'required|string|max:255',
+               'LastName'=>'required|string|max:255',
+               'School'=>'required|string|max:255'
+           ]);
+   
+           // create new student
+           $student = Student::create($data);
+   
+           return response()->json([
+               'messsage' => 'Success, Student Created.',
+               'data' => $student
+           ], 201);
+   
+       } catch (ValidationException $e) {
+           // catch validation error
+           return response()->json([
+               'status' => 'error',
+               'message' => 'Validation Error.',
+               'errors' => $e->errors()
+           ], 422);
+   
+       } catch (\Exception $e) {
+           // catch an error
+           return response()->json([
+               "status" => "error",
+               "message" => "Error creating student"
+           ], 500);
+       }
     }
 
     /**
@@ -29,7 +59,7 @@ class StudentsController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return $student;
     }
 
     /**
@@ -37,7 +67,30 @@ class StudentsController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        try{
+            $data = request()->validate([
+                'FirstName' => 'required|string|max:255',
+                'LastName' => 'required|string|max:255',
+                'School' => 'required|string|max:255'
+            ]);
+    
+            $student->update($data);
+    
+            return response()->json([
+                'message' => 'Updated Successfully.',
+                'data' => $student
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation Error.'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error updating student.'
+            ], 500);
+        }
     }
 
     /**
@@ -45,6 +98,18 @@ class StudentsController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        $deleted = $student;
+        $isSuccess = $student->delete();
+        if($isSuccess){
+            return response()->json([
+                'message' => 'Deleted Successfully.',
+                'data' => $deleted,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Deleted Successfully.',
+                'data' => $deleted,
+            ]);
+        }
     }
 }
